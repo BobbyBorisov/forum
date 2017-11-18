@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -90,6 +91,7 @@ class CreateThreadTest extends TestCase
     public function a_creator_of_thread_can_delete_it()
     {
         $user = factory(\App\User::class)->create();
+        Auth::login($user);
     	$thread = factory(\App\Thread::class)->create(['user_id' => $user->id]);
     	$replies = factory(\App\Reply::class,3)->create(['thread_id' => $thread->id]);
 
@@ -97,6 +99,7 @@ class CreateThreadTest extends TestCase
 
     	$this->assertCount(0, \App\Thread::all());
         $this->assertCount(0, \App\Reply::all());
+        $this->assertCount(0, \App\Activity::all());
     }
 
     /** @test */

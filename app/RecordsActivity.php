@@ -25,11 +25,20 @@ trait RecordsActivity
                     'subject_type' => get_class($model)
                 ]);
             });
+
+            static::deleting(function($model){
+               $model->activity()->delete();
+            });
         }
     }
 
     public static function getActivitiesToRecord()
     {
         return ['created'];
+    }
+
+    public function activity()
+    {
+        return $this->morphMany('App\Activity', 'subject');
     }
 }

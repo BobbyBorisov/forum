@@ -66,7 +66,7 @@ class ThreadsController extends Controller
             'channel_id' => request('channel_id')
         ]);
 
-        return redirect($thread->path());
+        return redirect($thread->path())->with('flash', 'Thread has been created');
     }
 
     public function destroy(Thread $thread)
