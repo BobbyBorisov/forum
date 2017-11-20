@@ -20,6 +20,10 @@ Route::get('/threads/create', 'ThreadsController@create');
 Route::get('/threads/{channel?}', 'ThreadsController@index');
 Route::get('/threads/{channel}/{thread}', 'ThreadsController@show');
 Route::post('/threads/{channel}/{thread}/replies', 'ThreadsRepliesController@store');
+Route::delete('/threads/{channel}/{thread}/replies/{reply}', 'ThreadsRepliesController@destroy')
+      ->name('reply.delete')
+      ->middleware('can:delete,reply');
+
 Route::delete('/threads/{thread}', 'ThreadsController@destroy')->name('thread.delete')->middleware('can:delete,thread');
 
 Route::post('/replies/{reply}/favorites', 'FavoritesController@store');

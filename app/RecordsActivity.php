@@ -12,6 +12,7 @@ trait RecordsActivity
 {
     protected static function bootRecordsActivity()
     {
+        //dd(auth()->user());
         if (auth()->user() == null) return;
 
         foreach(static::getActivitiesToRecord() as $activity)
@@ -25,11 +26,11 @@ trait RecordsActivity
                     'subject_type' => get_class($model)
                 ]);
             });
-
-            static::deleting(function($model){
-               $model->activity()->delete();
-            });
         }
+
+        static::deleting(function($model){
+            $model->activity()->delete();
+        });
     }
 
     public static function getActivitiesToRecord()

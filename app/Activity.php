@@ -8,6 +8,8 @@ class Activity extends Model
 {
     protected $guarded = [];
 
+    protected $with = ['subject'];
+
     public static function feed($take = 50)
     {
         return static::where('user_id', auth()->user()->id)

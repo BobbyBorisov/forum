@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Policies\ReplyPolicy;
 use App\Policies\ThreadPolicy;
 use App\Thread;
 use Illuminate\Support\Facades\Gate;
@@ -15,7 +16,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Thread::class => ThreadPolicy::class
+        Thread::class => ThreadPolicy::class,
+        Reply::class => ReplyPolicy::class
     ];
 
     /**
