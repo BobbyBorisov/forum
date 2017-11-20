@@ -53,14 +53,14 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function authorized_users_may_delete_their_own_replies()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
         $user = factory(\App\User::class)->create();
         Auth::login($user);
 
         $thread = factory(\App\Thread::class)->create();
         $reply = factory(\App\Reply::class)->create(['thread_id' => $thread->id, 'user_id' => $user->id]);
 
-        $this->delete($thread->path().'/replies/'.$reply->id);
+        $this->actingAs($user)->delete($thread->path().'/replies/'.$reply->id);
 
         $this->assertCount(0, $thread->replies);
 
@@ -106,5 +106,18 @@ class ParticipateInForumTest extends TestCase
         $this->actingAs($user)->delete($thread->path().'/replies/'.$reply->id);
 
         $this->assertCount(1, $thread->replies);
+    }
+
+    /** @test */
+    public function authorized_users_can_update_reply()
+    {
+    	$user = factory(\App\User::class)->create();
+    	$reply = factory(\App\Reply::class)->create();
+
+    	$this->patch('/replies/'.$reply->id,[
+    	    'body' => 'new body'
+        ]);
+
+    	$this->assertEquals('new body', \App\Reply::first()->body);
     }
 }

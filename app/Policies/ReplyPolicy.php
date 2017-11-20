@@ -42,7 +42,7 @@ class ReplyPolicy
      */
     public function update(User $user, Reply $reply)
     {
-        //
+        dd('ajajaja');
     }
 
     /**
@@ -54,6 +54,7 @@ class ReplyPolicy
      */
     public function delete(User $user, Reply $reply)
     {
+        dd('jaajaj');
         return true;
         //return $reply->owner->id == $user->id;
     }

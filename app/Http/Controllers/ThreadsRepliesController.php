@@ -10,7 +10,7 @@ class ThreadsRepliesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->only('store','destroy');
+        $this->middleware('auth')->only(['store', 'destroy']);
     }
 
     public function store(Channel $channel, Thread $thread)
@@ -27,8 +27,21 @@ class ThreadsRepliesController extends Controller
         return back();
     }
 
+    public function update(Reply $reply)
+    {
+        request()->validate([
+            'body' => 'required'
+        ]);
+
+        $reply->update(['body' => request('body')]);
+
+        return response([], 204);
+    }
+
     public function destroy(Channel $channel, Thread $thread, Reply $reply)
     {
+        if($reply->owner->id != auth()->user()->id) return response([], 403);
+
         $reply->delete();
     }
 }
