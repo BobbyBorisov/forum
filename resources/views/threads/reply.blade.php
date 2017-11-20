@@ -7,16 +7,6 @@
             </div>
             <div class="gotoend">
             @auth
-                    @can('delete', $reply)
-                        <div>
-                            <form method="POST" action="{{ route('reply.delete', $reply) }}">
-                                {{csrf_field()}}
-                                {{method_field("DELETE")}}
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </div>
-                    @endcan
-
                 @if($reply->isFavorited())
                     <form method="POST" action="/replies/{{$reply->id}}/favorites">
                         {{csrf_field()}}
@@ -50,6 +40,7 @@
 
         <div class="panel-footer">
             <button class="btn btn-xs" @click="editing = true">Edit</button>
+            <button class="btn btn-xs btn-danger" @click="destroy">Delete</button>
         </div>
     </div>
 </reply>

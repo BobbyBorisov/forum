@@ -43274,12 +43274,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         update: function update() {
+            var vm = this;
+
             axios.patch('/replies/' + this.attributes.id, {
                 body: this.body
+            }).then(function () {
+                vm.editing = false;
+                flash('updated reply');
+            }).catch(function () {
+                flash('error');
             });
-
-            this.editing = false;
-            flash('updated reply');
+        },
+        destroy: function destroy() {
+            var vm = this;
+            axios.delete('/replies/' + this.attributes.id).then(function () {
+                $(vm.$el).fadeOut(300, function () {
+                    flash('reply deleted');
+                });
+            });
         }
     }
 });

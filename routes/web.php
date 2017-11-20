@@ -21,6 +21,7 @@ Route::get('/threads/{channel?}', 'ThreadsController@index');
 Route::get('/threads/{channel}/{thread}', 'ThreadsController@show');
 Route::post('/threads/{channel}/{thread}/replies', 'ThreadsRepliesController@store');
 Route::patch('/replies/{reply}', 'ThreadsRepliesController@update');
+Route::delete('/replies/{reply}', 'ThreadsRepliesController@destroy');
 Route::delete('/threads/{channel}/{thread}/replies/{reply}', 'ThreadsRepliesController@destroy')
       ->name('reply.delete');
 //TODO fix this authorization with gate because it is not working
