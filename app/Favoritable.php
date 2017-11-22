@@ -13,7 +13,7 @@ trait Favoritable
     protected static function bootFavoritable()
     {
         static::deleting(function ($model){
-            $model->favorites()->delete();
+            $model->favorites->each->delete();
         });
     }
 
@@ -31,7 +31,7 @@ trait Favoritable
 
     public function unfavorite()
     {
-        $this->favorites()->delete();
+        $this->favorites()->where('user_id', auth()->user()->id)->get()->each->delete();
     }
 
     public function isFavorited()
