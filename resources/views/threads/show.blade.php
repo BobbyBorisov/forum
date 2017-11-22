@@ -27,11 +27,9 @@
                     </div>
                 </div>
 
-                @foreach ($replies as $reply)
-                    @include('threads.reply')
-                @endforeach
+                <replies :data="{{$replies}}"></replies>
 
-                {{$replies->links()}}
+                {{--{{$replies->links()}}--}}
 
                 <form method="POST" action="{{$thread->path().'/replies'}}">
                     {{csrf_field()}}
