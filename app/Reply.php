@@ -14,6 +14,9 @@ class Reply extends Model
     protected $with = ['owner','favorites','thread'];
 
     protected $withCount = ['favorites'];
+
+    protected $appends = ['isFavorited'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -26,4 +29,5 @@ class Reply extends Model
     {
         return $this->belongsTo(Thread::class);
     }
+
 }

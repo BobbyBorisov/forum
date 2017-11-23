@@ -6,7 +6,7 @@
                 {{created_at}} ago...
             </div>
             <div class="gotoend">
-                favorite
+                <favorite :data="data"></favorite>
             </div>
         </div>
 
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div class="panel-footer">
+        <div class="panel-footer" v-if="canUpdate">
             <button class="btn btn-xs" @click="editing = true">Edit</button>
             <button class="btn btn-xs btn-danger" @click="destroy">Delete</button>
         </div>
@@ -34,16 +34,23 @@
         data() {
             return {
                 editing:false,
+                id: this.data.id,
                 body: this.data.body,
                 owner: this.data.owner,
                 created_at: this.data.created_at
+            }
+        },
+        computed:{
+            canUpdate() {
+                console.log(this.authorize(user => this.data.user_id == user.id));
+                return this.authorize(user => this.data.user_id == user.id);
             }
         },
         methods:{
             update(){
                 var vm = this;
 
-                axios.patch('/replies/'+this.attributes.id, {
+                axios.patch('/replies/'+this.data.id, {
                     body: this.body
                 }).then(function(){
                     vm.editing = false;
@@ -54,14 +61,11 @@
             },
             destroy(){
                 var vm = this;
-                axios.delete('/replies/' + this.attributes.id).then(function(){
-                    $(vm.$el).fadeOut(300, () => {
-                        flash('reply deleted');
-                    });
-                });
-
-
-            }
+                axios.delete('/replies/' + this.data.id)
+                     .then(function(){
+                        vm.$emit('deleted', vm.id);
+                     });
+            },
         }
     }
 </script>

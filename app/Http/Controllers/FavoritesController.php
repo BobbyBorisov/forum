@@ -15,13 +15,13 @@ class FavoritesController extends Controller
     {
         $reply->favorite();
 
-        return back();
+        return response([],204);
     }
 
     public function destroy(\App\Reply $reply)
     {
         $reply->unfavorite();
 
-        return back();
+        return response([],204);
     }
 }

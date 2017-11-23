@@ -34,8 +34,13 @@ trait Favoritable
         $this->favorites()->where('user_id', auth()->user()->id)->get()->each->delete();
     }
 
-    public function isFavorited()
+    public function IsFavorited()
     {
         return ! ! $this->favorites->where('user_id', auth()->user()->id)->count();
+    }
+
+    public function getIsFavoritedAttribute()
+    {
+        return $this->isFavorited();
     }
 }

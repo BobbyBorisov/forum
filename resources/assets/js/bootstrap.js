@@ -50,6 +50,11 @@ window.flash = function(message){
     window.events.$emit('flash',message);
 };
 
+Vue.prototype.authorize = function(handler){
+    if(!window.App.user) return false;
+    return handler(window.App.user);
+}
+
 // import Echo from 'laravel-echo'
 
 // window.Pusher = require('pusher-js');
