@@ -13,6 +13,11 @@ class ThreadsRepliesController extends Controller
         $this->middleware('auth')->only(['store', 'destroy']);
     }
 
+    public function index(Channel $channel, Thread $thread)
+    {
+        return $thread->replies()->paginate(1);
+    }
+
     public function store(Channel $channel, Thread $thread)
     {
         request()->validate([
