@@ -18,7 +18,7 @@
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Statsxdas
+                            Info
                         </div>
                         <div class="panel-body">
                             <p>Created: {{$thread->created_at->diffForHumans()}}</p>

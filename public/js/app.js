@@ -44375,6 +44375,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get('/profile/' + window.App.user.id + '/notifications').then(function (response) {
             vm.notifications = response.data;
         });
+    },
+
+    methods: {
+        markAsRead: function markAsRead(id) {
+            axios.post('/profile/' + window.App.user.id + "/notifications/" + id, []);
+            this.notifications.splice(id, 1);
+        }
     }
 });
 
@@ -44386,22 +44393,30 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("li", { staticClass: "dropdown" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "ul",
-      { staticClass: "dropdown-menu" },
-      _vm._l(_vm.notifications, function(notification) {
-        return _c("li", [
-          _c("a", {
-            attrs: { href: notification.data.link },
-            domProps: { textContent: _vm._s(notification.data.message) }
+  return _vm.notifications.length > 0
+    ? _c("li", { staticClass: "dropdown" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "ul",
+          { staticClass: "dropdown-menu" },
+          _vm._l(_vm.notifications, function(notification) {
+            return _c("li", [
+              _c("a", {
+                key: notification.id,
+                attrs: { href: notification.data.link },
+                domProps: { textContent: _vm._s(notification.data.message) },
+                on: {
+                  click: function($event) {
+                    _vm.markAsRead(notification.id)
+                  }
+                }
+              })
+            ])
           })
-        ])
-      })
-    )
-  ])
+        )
+      ])
+    : _vm._e()
 }
 var staticRenderFns = [
   function() {
@@ -44411,7 +44426,7 @@ var staticRenderFns = [
     return _c(
       "a",
       {
-        staticClass: "dropdown-toggle",
+        staticClass: "dropdown-toggle glyphicon glyphicon-bell",
         attrs: {
           href: "#",
           "data-toggle": "dropdown",
@@ -44420,7 +44435,7 @@ var staticRenderFns = [
           "aria-haspopup": "true"
         }
       },
-      [_vm._v("\n        Notifications "), _c("span", { staticClass: "caret" })]
+      [_c("span", { staticClass: "caret" })]
     )
   }
 ]

@@ -40,3 +40,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/user/{user}/profile', 'UserProfileController@index')->name('profile');
 Route::get('/profile/{user}/notifications', 'UserNotificationsController@index');
+Route::post('/profile/{user}/notifications/{notification}', 'UserNotificationsController@store');
