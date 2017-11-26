@@ -22,6 +22,8 @@ Vue.component('favorite', require('./components/Favorite.vue'));
 Vue.component('new-reply', require('./components/NewReply.vue'));
 Vue.component('thread-view', require('./components/ThreadView.vue'));
 Vue.component('paginator', require('./components/Paginator.vue'));
+Vue.component('subscription-button', require('./components/SubscriptionButton.vue'));
+Vue.component('user-notifications', require('./components/UserNotifications.vue'));
 
 const app = new Vue({
     el: '#app'

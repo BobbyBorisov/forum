@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Notifications\NewReplyAdded;
+use App\Policies\ReplyPolicy;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +18,11 @@ class Thread extends Model
 
     public $with = ['creator','channel'];
 
+    protected $withCount = ['subscriptions'];
+
     protected $dates = ['deleted_at'];
+
+    protected $appends = ['isSubscribed'];
 
     protected static function boot()
     {
@@ -50,11 +56,47 @@ class Thread extends Model
 
     public function addReply($reply)
     {
-        return $this->replies()->create($reply);
+        $reply = $this->replies()->create($reply);
+
+        $this->subscriptions
+             ->where('user_id','!=', auth()->user()->id)
+             ->each
+             ->notify($reply);
     }
 
     public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
+    }
+
+    public function subscribe($user)
+    {
+        $this->subscriptions()->create(['user_id' => $user->id]);
+    }
+
+    public function unsubscribe($user)
+    {
+        $this->subscriptions()->where('user_id', $user->id)->delete();
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
+    public function isSubscribed()
+    {
+        if (!auth()->user()) return false;
+        return $this->subscriptions()->where('user_id', auth()->user()->id)->exists();
+    }
+
+    public function getIsSubscribedAttribute()
+    {
+        return $this->isSubscribed();
+    }
+
+    public function notify($reply)
+    {
+        $this->user->notify(new NewReplyAdded());
     }
 }

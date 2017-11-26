@@ -24,10 +24,14 @@ class ThreadsRepliesController extends Controller
             'body' => 'required'
         ]);
 
-        return $thread->addReply([
+        $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->user()->id
         ])->load('owner');
+
+
+
+        return response([], 201);
     }
 
     public function update(Reply $reply)

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -24,10 +25,13 @@ class ThreadTest extends TestCase
     public function it_can_add_a_reply()
     {
         $thread = factory(\App\Thread::class)->create();
+        $user = factory(\App\User::class)->create();
+
+        Auth::login($user);
 
         $thread->addReply([
             'body' => 'Foobar',
-            'user_id' => 1
+            'user_id' => $user->id
         ]);
 
         $this->assertCount(1, $thread->replies);
@@ -46,5 +50,63 @@ class ThreadTest extends TestCase
     {
     	$thread = factory(\App\Thread::class)->create();
     	$this->assertEquals("/threads/{$thread->channel->slug}/{$thread->id}", $thread->path());
+    }
+
+    /** @test */
+    public function user_can_subscribe_to_a_thread()
+    {
+    	$user = factory(\App\User::class)->create();
+
+    	$thread = factory(\App\Thread::class)->create();
+
+    	$thread->subscribe($user);
+
+    	$this->assertCount(1,$thread->subscriptions()->where('user_id', $user->id)->get());
+    }
+
+    /** @test */
+    public function user_can_unsubscribe_of_thread()
+    {
+        $user = factory(\App\User::class)->create();
+
+        $thread = factory(\App\Thread::class)->create();
+
+        $thread->subscribe($user);
+
+        $this->assertCount(1,$thread->subscriptions()->where('user_id', $user->id)->get());
+
+        $thread->unsubscribe($user);
+
+        $this->assertCount(0,$thread->subscriptions()->where('user_id', $user->id)->get());
+    }
+
+    /** @test */
+    public function it_can_check_if_user_is_subscribed()
+    {
+        $user = factory(\App\User::class)->create();
+        $thread = factory(\App\Thread::class)->create();
+
+        Auth::login($user);
+
+        $this->assertFalse($thread->isSubscribed());
+
+        $thread->subscribe($user);
+
+        $this->assertTrue($thread->isSubscribed());
+    }
+
+    /** @test */
+    public function it_knows_how_many_subscribers_it_has()
+    {
+        $userOne = factory(\App\User::class)->create();
+        $userTwo = factory(\App\User::class)->create();
+        $thread = factory(\App\Thread::class)->create();
+
+        Auth::login($userOne);
+
+        $thread->subscribe($userOne);
+        $thread->subscribe($userTwo);
+
+        $this->assertCount(2, $thread->subscriptions);
     }
 }

@@ -18,12 +18,14 @@
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Stats
+                            Statsxdas
                         </div>
                         <div class="panel-body">
                             <p>Created: {{$thread->created_at->diffForHumans()}}</p>
                             <p>Creator: <a href="#">{{$thread->creator->name}}</a></p>
                             <p>{{str_plural('Comment', $thread->replies_count)}}: <span v-text="repliesCount"></span></p>
+                            <p>{{str_plural('Subscriber', $thread->subscriptions_count)}}: {{$thread->subscriptions_count}}</p>
+                            <subscription-button :active="{{json_encode($thread->isSubscribed)}}"></subscription-button>
                         </div>
                     </div>
                 </div>
