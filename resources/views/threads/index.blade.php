@@ -11,7 +11,13 @@
                         @foreach ($threads as $thread)
                             <article>
                                 <div class="level">
-                                    <h4 class="flex"><a href="{{$thread->path()}}">{{$thread->title}}</a></h4>
+                                    <h4 class="flex">
+                                        @if(auth()->check() && $thread->hasUpdatesFor(auth()->user()))
+                                            <a href="{{$thread->path()}}"><strong>{{$thread->title}}</strong></a>
+                                        @else
+                                            <a href="{{$thread->path()}}">{{$thread->title}}</a>
+                                        @endif
+                                    </h4>
                                     <strong>
                                         {{$thread->replies_count}} replies.
                                     </strong>

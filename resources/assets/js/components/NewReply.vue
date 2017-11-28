@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="form-group">
-            <textarea name="body" v-model="body" id="body" class="form-control" placeholder="Have something to say?"></textarea>
+            <textarea name="body" v-model="body" id="body" class="form-control" @keydown.enter="publish" placeholder="Have something to say? Press enter to submit"></textarea>
         </div>
-        <button type="submit" class="btn btn-default" @click="publish">Publish</button>
+        <!--<button type="submit" class="btn btn-default" data-toggle="confirmation"  @click="publish">Publish</button>-->
     </div>
 </template>
 
@@ -20,7 +20,6 @@
                 var vm = this;
                 axios.post(location.pathname + '/replies',{ body: this.body})
                     .then(function(response){
-                        console.log(response);
                         vm.$emit('created', response.data);
                         vm.body='';
                     });

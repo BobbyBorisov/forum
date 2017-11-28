@@ -90,4 +90,15 @@ class ReadThreadsTest extends TestCase
 
         $this->assertEquals([3,2,1] , array_column($response, 'replies_count'));
     }
+
+    /** @test */
+    public function a_user_who_visites_thread_marks_it_as_read_in_cache()
+    {
+        $user = factory(\App\User::class)->create();
+        $thread = factory(\App\Thread::class)->create();
+
+        $this->actingAs($user)->getJson($thread->path());
+
+        $this->assertFalse($thread->hasUpdatesFor($user));
+    }
 }

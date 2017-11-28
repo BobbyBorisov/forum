@@ -15,7 +15,7 @@ class ThreadsRepliesController extends Controller
 
     public function index(Channel $channel, Thread $thread)
     {
-        return $thread->replies()->paginate(1);
+        return $thread->replies()->paginate(20);
     }
 
     public function store(Channel $channel, Thread $thread)
@@ -24,14 +24,14 @@ class ThreadsRepliesController extends Controller
             'body' => 'required'
         ]);
 
-        $thread->addReply([
+        $reply = $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->user()->id
         ])->load('owner');
 
 
 
-        return response([], 201);
+        return response($reply, 201);
     }
 
     public function update(Reply $reply)

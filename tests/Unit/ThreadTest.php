@@ -109,4 +109,16 @@ class ThreadTest extends TestCase
 
         $this->assertCount(2, $thread->subscriptions);
     }
+
+    /** @test */
+    public function it_knows_if_has_updates_for_user()
+    {
+    	$user = factory(\App\User::class)->create();
+        $thread = factory(\App\Thread::class)->create();
+
+        $hasUpdatesFor = $thread->hasUpdatesFor($user);
+
+        $this->assertTrue($hasUpdatesFor);
+    }
+
 }

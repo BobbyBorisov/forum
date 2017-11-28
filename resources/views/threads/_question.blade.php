@@ -8,7 +8,7 @@
                 <form method="POST" action="{{ route('thread.delete', $thread) }}">
                     {{csrf_field()}}
                     {{method_field("DELETE")}}
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-sm btn-danger" data-toggle="confirmation">Delete</button>
                 </form>
             </div>
         @endcan

@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div v-if="active">
         <ul class="pagination">
             <li>
                 <a href="#" aria-label="Previous" v-if="prevUrl" @click.prevent="page--">
                     <span aria-hidden="true">&laquo; Prev</span>
                 </a>
             </li>
-            <li v-for="n in this.total"><a href="#" @click.prevent="page=n">{{n}}</a></li>
+
             <li>
                 <a href="#" aria-label="Next" v-if="nextUrl" @click.prevent="page++">
                     <span aria-hidden="true">&raquo; Next</span>
@@ -26,6 +26,11 @@
                 total: 0,
                 page: 1,
             }
+        },
+        computed:{
+          active(){
+              return this.prevUrl && this.prevUrl;
+          }
         },
         watch:{
             dataSet() {

@@ -2,7 +2,7 @@
     <div class="panel panel-default">
         <div class="panel-heading level-end">
             <div>
-                {{owner.name}} said
+                jdjsa said
                 {{created_at}} ago...
             </div>
             <div class="gotoend">

@@ -13,6 +13,8 @@ class Reply extends Model
 
     protected $with = ['owner','favorites','thread'];
 
+    protected $touches = ['thread'];
+
     protected $withCount = ['favorites'];
 
     protected $appends = ['isFavorited'];

@@ -62,6 +62,8 @@ class Thread extends Model
              ->where('user_id','!=', auth()->user()->id)
              ->each
              ->notify($reply);
+
+        return $reply;
     }
 
     public function scopeFilter($query, $filters)
@@ -86,6 +88,7 @@ class Thread extends Model
 
     public function isSubscribed()
     {
+        //return true;
         if (!auth()->user()) return false;
         return $this->subscriptions()->where('user_id', auth()->user()->id)->exists();
     }
@@ -98,5 +101,12 @@ class Thread extends Model
     public function notify($reply)
     {
         $this->user->notify(new NewReplyAdded());
+    }
+
+    public function hasUpdatesFor($user)
+    {
+        $key = sprintf('users.%s.thread.%s', $user->id, $this->id);
+
+        return $this->updated_at > cache($key);
     }
 }
