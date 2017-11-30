@@ -43857,7 +43857,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var vm = this;
 
             axios.post(location.pathname + '/replies', { body: this.body }).catch(function (error) {
-                flash(error.response.data.errors.body[0], 'danger');
+                if (typeof error.response.data === 'string') {
+                    flash(error.response.data, 'danger');
+                } else {
+                    flash(error.response.data.errors.body[0], 'danger');
+                }
             }).then(function (response) {
                 vm.$emit('created', response.data);
                 vm.body = '';

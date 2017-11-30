@@ -7,6 +7,7 @@ use App\Reply;
 use App\Inspections\Spam;
 use App\Rules\SpamFree;
 use App\Thread;
+use Illuminate\Support\Facades\Gate;
 
 class ThreadsRepliesController extends Controller
 {
@@ -31,6 +32,10 @@ class ThreadsRepliesController extends Controller
         request()->validate([
             'body' => ['required', new SpamFree]
         ]);
+
+        if (Gate::denies('create', new Reply)) {
+            return response('You are posting too frequently. Please take a break ;)', 422);
+        }
 
         $reply = $thread->addReply([
             'body' => request('body'),

@@ -4,12 +4,14 @@ namespace Tests\Unit;
 
 use App\Reply;
 use App\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ReplyTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic test example.
      *
@@ -20,5 +22,16 @@ class ReplyTest extends TestCase
         $reply = factory(Reply::class)->create();
         //dd($reply->owner);
         $this->assertInstanceOf(User::class, $reply->owner);
+    }
+
+    /** @test */
+    public function it_knows_if_it_was_just_published()
+    {
+    	$reply = factory(\App\Reply::class)->create();
+    	$this->assertTrue($reply->wasJustPublished());
+
+        $reply = factory(\App\Reply::class)->create(['created_at' => Carbon::now()->subDay()]);
+        $this->assertFalse($reply->wasJustPublished());
+
     }
 }

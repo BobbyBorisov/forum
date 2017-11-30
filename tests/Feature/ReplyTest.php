@@ -17,4 +17,18 @@ class ReplyTest extends TestCase
 
     	$this->actingAs($user)->postJson($thread->path().'/replies',[])->assertStatus(422);
     }
+
+    /** @test */
+    public function user_cannot_can_post_replies_once_per_minute()
+    {
+        //$this->withoutExceptionHandling();
+    	$this->signIn();
+    	$thread = factory(\App\Thread::class)->create();
+
+    	$this->postJson($thread->path().'/replies',['body' => 'valid body'])
+             ->assertStatus(201);
+
+        $this->postJson($thread->path().'/replies',['body' => 'another valid body'])
+            ->assertStatus(422);
+    }
 }

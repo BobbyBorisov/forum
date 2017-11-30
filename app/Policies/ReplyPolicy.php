@@ -30,7 +30,13 @@ class ReplyPolicy
      */
     public function create(User $user)
     {
-        //
+        $reply = Reply::where('user_id', $user->id)->latest()->first();
+
+        if(optional($reply)->wasJustPublished()){
+            return false;
+        }
+
+        return true;
     }
 
     /**

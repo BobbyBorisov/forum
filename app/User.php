@@ -43,4 +43,9 @@ class User extends Authenticatable
         $key = sprintf('users.%s.thread.%s', $this->id, $thread->id);
         cache()->forever($key, Carbon::now('Europe/Sofia'));
     }
+
+    public function lastReply()
+    {
+        return $this->hasOne(Reply::class)->latest();
+    }
 }
