@@ -43480,9 +43480,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         canUpdate: function canUpdate() {
             var _this = this;
 
-            console.log(this.authorize(function (user) {
-                return _this.data.user_id == user.id;
-            }));
             return this.authorize(function (user) {
                 return _this.data.user_id == user.id;
             });
@@ -43522,7 +43519,9 @@ var render = function() {
     _c("div", { staticClass: "panel-heading level-end" }, [
       _c("div", [
         _vm._v(
-          "\n            jdjsa said\n            " +
+          "\n            " +
+            _vm._s(_vm.owner.name) +
+            " said\n            " +
             _vm._s(_vm.created_at) +
             " ago...\n        "
         )

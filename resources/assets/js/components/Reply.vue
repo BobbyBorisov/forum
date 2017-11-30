@@ -2,7 +2,7 @@
     <div class="panel panel-default">
         <div class="panel-heading level-end">
             <div>
-                jdjsa said
+                {{owner.name}} said
                 {{created_at}} ago...
             </div>
             <div class="gotoend">
@@ -42,7 +42,6 @@
         },
         computed:{
             canUpdate() {
-                console.log(this.authorize(user => this.data.user_id == user.id));
                 return this.authorize(user => this.data.user_id == user.id);
             }
         },

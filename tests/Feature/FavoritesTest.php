@@ -19,6 +19,7 @@ class FavoritesTest extends TestCase
         $reply = factory(Reply::class)->create();
 
         Auth::login($user);
+
         $this->actingAs($user)->post('/replies/'.$reply->id.'/favorites');
 
         $this->assertCount(1, $reply->fresh()->favorites);

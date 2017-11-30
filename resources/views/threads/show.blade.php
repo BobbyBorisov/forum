@@ -7,7 +7,7 @@
                 <div class="col-md-8">
                     @include('threads._question')
 
-                    <replies :data="{{$replies}}" @add="repliesCount++" @remove="repliesCount--"></replies>
+                    <replies @add="repliesCount++" @remove="repliesCount--"></replies>
 
                     {{--{{$replies->links()}}--}}
 

@@ -16,7 +16,7 @@ class Thread extends Model
 
     protected $cascadeDeletes = ['replies'];
 
-    public $with = ['creator','channel'];
+    protected $with = ['creator','channel'];
 
     protected $withCount = ['subscriptions'];
 
@@ -88,7 +88,6 @@ class Thread extends Model
 
     public function isSubscribed()
     {
-        //return true;
         if (!auth()->user()) return false;
         return $this->subscriptions()->where('user_id', auth()->user()->id)->exists();
     }
