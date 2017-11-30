@@ -2,6 +2,8 @@
 
 namespace App\Inspections;
 
+use App\Exceptions\InvalidKeyWordException;
+
 class InvalidKeywords {
 
     private $keywords = [
@@ -14,8 +16,10 @@ class InvalidKeywords {
         {
             if(str_contains($body, $keyword))
             {
-                throw new \Exception('your reply contains spam');
+                throw new InvalidKeyWordException('You have entered spam words.');
             }
         }
+
+        return false;
     }
 }

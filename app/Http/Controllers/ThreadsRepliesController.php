@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Reply;
 use App\Inspections\Spam;
+use App\Rules\SpamFree;
 use App\Thread;
 
 class ThreadsRepliesController extends Controller
@@ -19,39 +20,33 @@ class ThreadsRepliesController extends Controller
         return $thread->replies()->paginate(20);
     }
 
-    public function store(Channel $channel, Thread $thread, Spam $spam)
+    /**
+     * @param \App\Channel $channel
+     * @param \App\Thread $thread
+     * @param Spam $spam
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function store(Channel $channel, Thread $thread)
     {
-        try {
-            request()->validate([
-                'body' => 'required'
-            ]);
+        request()->validate([
+            'body' => ['required', new SpamFree]
+        ]);
 
-            $spam->detect(request('body'));
-
-            $reply = $thread->addReply([
-                'body' => request('body'),
-                'user_id' => auth()->user()->id
-            ])->load('owner');
-        } catch (\Exception $e){
-            return response('Sorry, your reply cannot be saved', 422);
-        }
+        $reply = $thread->addReply([
+            'body' => request('body'),
+            'user_id' => auth()->user()->id
+        ])->load('owner');
 
         return response($reply, 201);
     }
 
     public function update(Reply $reply, Spam $spam)
     {
-        try {
-            request()->validate([
-                'body' => 'required'
-            ]);
+        request()->validate([
+            'body' => ['required', new SpamFree]
+        ]);
 
-            $spam->detect(request('body'));
-
-            $reply->update(['body' => request('body')]);
-        } catch (\Exception $e){
-            return response('Sorry, your reply cannot be saved', 422);
-        }
+        $reply->update(['body' => request('body')]);
 
         return response([], 204);
     }

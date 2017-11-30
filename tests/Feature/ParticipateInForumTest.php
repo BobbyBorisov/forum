@@ -129,11 +129,29 @@ class ParticipateInForumTest extends TestCase
         $this->signIn();
 
         $thread = factory(Thread::class)->create();
+
         $reply = factory(Reply::class)->make([
             'body' => 'yahoo customer support'
         ]);
 
-        $this->post($thread->path().'/replies', $reply->toArray())
-             ->assertStatus(422);
+        $this->postJson($thread->path().'/replies', $reply->toArray())
+             ->assertStatus(422)
+             ->assertJsonValidationErrors(['body']);
+    }
+
+    /** @test */
+    public function a_reply_that_contains_key_held_down_spam_may_not_be_created()
+    {
+        $this->signIn();
+
+        $thread = factory(Thread::class)->create();
+
+        $reply = factory(Reply::class)->make([
+            'body' => 'dddddddd'
+        ]);
+
+        $this->postJson($thread->path().'/replies', $reply->toArray())
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['body']);
     }
 }

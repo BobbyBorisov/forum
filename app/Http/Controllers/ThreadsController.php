@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Inspections\Spam;
+use App\Rules\SpamFree;
 use App\Thread;
 use Carbon\Carbon;
 
@@ -57,15 +58,16 @@ class ThreadsController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store()
     {
         request()->validate([
-            'title' => 'required',
-            'body'  => 'required',
+            'title' => ['required', new SpamFree],
+            'body'  => ['required', new SpamFree],
             'channel_id' => 'required|exists:channels,id'
         ]);
-
-        resolve(Spam::class)->detect(request('body'));
 
         $thread = Thread::create([
             'title' => request('title'),
