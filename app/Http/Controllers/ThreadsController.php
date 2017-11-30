@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Channel;
 use App\Filters\ThreadFilters;
+use App\Inspections\Spam;
 use App\Thread;
 use Carbon\Carbon;
 
@@ -63,6 +64,8 @@ class ThreadsController extends Controller
             'body'  => 'required',
             'channel_id' => 'required|exists:channels,id'
         ]);
+
+        resolve(Spam::class)->detect(request('body'));
 
         $thread = Thread::create([
             'title' => request('title'),

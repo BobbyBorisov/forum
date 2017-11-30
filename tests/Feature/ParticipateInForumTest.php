@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Reply;
+use App\Thread;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -119,5 +121,22 @@ class ParticipateInForumTest extends TestCase
         ]);
 
     	$this->assertEquals('new body', \App\Reply::first()->body);
+    }
+
+    /** @test */
+    public function a_reply_that_contains_spam_may_not_be_created()
+    {
+        $this->withoutExceptionHandling();
+        $this->signIn();
+
+        $thread = factory(Thread::class)->create();
+        $reply = factory(Reply::class)->make([
+            'body' => 'yahoo customer support'
+        ]);
+
+        $this->expectException(\Exception::class);
+        $this->post($thread->path().'/replies', $reply->toArray());
+
+
     }
 }

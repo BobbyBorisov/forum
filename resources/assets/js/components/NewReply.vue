@@ -18,10 +18,16 @@
         methods:{
             publish(){
                 var vm = this;
+
                 axios.post(location.pathname + '/replies',{ body: this.body})
+                    .catch(function(error){
+                        console.log(error.response);
+                        flash(error.response.data,'danger');
+                    })
                     .then(function(response){
                         vm.$emit('created', response.data);
                         vm.body='';
+                        flash('Your reply is saved','success');
                     });
             }
         }

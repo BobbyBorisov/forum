@@ -54,8 +54,8 @@
                 }).then(function(){
                     vm.editing = false;
                     flash('updated reply');
-                }).catch(function (){
-                    flash('error');
+                }).catch(error => {
+                    flash(error.response.data, 'danger');
                 });
             },
             destroy(){
