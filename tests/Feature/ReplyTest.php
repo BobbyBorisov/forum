@@ -14,6 +14,6 @@ class ReplyTest extends TestCase
     	$user = factory(\App\User::class)->create();
     	$thread = factory(\App\Thread::class)->create();
 
-    	$this->actingAs($user)->post($thread->path().'/replies',[])->assertSessionHasErrors('body');
+    	$this->actingAs($user)->post($thread->path().'/replies',[])->assertStatus(422);
     }
 }

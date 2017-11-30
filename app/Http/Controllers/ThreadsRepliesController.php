@@ -52,7 +52,7 @@ class ThreadsRepliesController extends Controller
         } catch (\Exception $e){
             return response('Sorry, your reply cannot be saved', 422);
         }
-        
+
         return response([], 204);
     }
 
