@@ -35,6 +35,8 @@ class Reply extends Model
 
     public function wasJustPublished()
     {
+        if (app()->environment('local')) return false;
+
         return $this->created_at->gt(Carbon::now()->subMinute());
     }
 

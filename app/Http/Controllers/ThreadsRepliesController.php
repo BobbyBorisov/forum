@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Http\Requests\CreateReply;
 use App\Notifications\YouWereMentioned;
 use App\Reply;
 use App\Inspections\Spam;
@@ -27,24 +28,16 @@ class ThreadsRepliesController extends Controller
     /**
      * @param \App\Channel $channel
      * @param \App\Thread $thread
-     * @param Spam $spam
+     * @param \App\Http\Requests\CreateReply $form
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @internal param \App\Inspections\Spam $spam
      */
-    public function store(Channel $channel, Thread $thread)
+    public function store(Channel $channel, Thread $thread, CreateReply $form)
     {
-        request()->validate([
-            'body' => ['required', new SpamFree]
-        ]);
-
-        if (Gate::denies('create', new Reply)) {
-            return response('You are posting too frequently. Please take a break ;)', 422);
-        }
-
         $reply = $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->user()->id
         ])->load('owner');
-
 
         return response($reply, 201);
     }

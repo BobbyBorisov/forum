@@ -48,9 +48,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        //if ($exception instanceof InvalidKeyWordException) {
-        //    return response($exception->getMessage(), 422);
-        //}
+        if ($exception instanceof PostingTooOftenException) {
+            return response($exception->getMessage(), 422);
+        }
 
         return parent::render($request, $exception);
     }
