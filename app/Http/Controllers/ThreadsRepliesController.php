@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Notifications\YouWereMentioned;
 use App\Reply;
 use App\Inspections\Spam;
 use App\Rules\SpamFree;
 use App\Thread;
+use App\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 
 class ThreadsRepliesController extends Controller
 {
@@ -41,6 +44,7 @@ class ThreadsRepliesController extends Controller
             'body' => request('body'),
             'user_id' => auth()->user()->id
         ])->load('owner');
+
 
         return response($reply, 201);
     }

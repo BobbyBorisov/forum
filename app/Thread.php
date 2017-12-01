@@ -2,11 +2,14 @@
 
 namespace App;
 
+use App\Events\ThreadReceivedNewReply;
 use App\Notifications\NewReplyAdded;
+use App\Notifications\YouWereMentioned;
 use App\Policies\ReplyPolicy;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Notification;
 
 class Thread extends Model
 {
@@ -58,10 +61,7 @@ class Thread extends Model
     {
         $reply = $this->replies()->create($reply);
 
-        $this->subscriptions
-             ->where('user_id','!=', auth()->user()->id)
-             ->each
-             ->notify($reply);
+        event(new ThreadReceivedNewReply($reply, $this));
 
         return $reply;
     }
@@ -95,11 +95,6 @@ class Thread extends Model
     public function getIsSubscribedAttribute()
     {
         return $this->isSubscribed();
-    }
-
-    public function notify($reply)
-    {
-        $this->user->notify(new NewReplyAdded());
     }
 
     public function hasUpdatesFor($user)
