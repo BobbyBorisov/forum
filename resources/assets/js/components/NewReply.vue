@@ -8,12 +8,29 @@
 </template>
 
 <script>
+    import 'at.js';
+    import 'jquery.caret';
+
     export default {
         props: ['data'],
         data(){
             return {
                 body:''
             }
+        },
+        mounted(){
+            $('#body').atwho({
+                at: "@",
+                delay: 500,
+                callbacks: {
+                    remoteFilter: function(query, callback) {
+                        console.log('called');
+                        $.getJSON("/api/users", {name: query}, function(data) {
+                            callback(data)
+                        });
+                    }
+                }
+            })
         },
         methods:{
             publish(){

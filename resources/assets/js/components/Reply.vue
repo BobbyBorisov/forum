@@ -18,7 +18,7 @@
                 <button class="btn btn-xs btn-success" @click="update">Update</button>
                 <button class="btn btn-xs btn-link" @click="editing = false">Cancel</button>
             </div>
-            <div v-else v-text="body">
+            <div v-else v-html="body">
             </div>
         </div>
 

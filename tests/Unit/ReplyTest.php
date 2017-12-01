@@ -50,4 +50,17 @@ class ReplyTest extends TestCase
 
         $this->assertEquals([], $reply->mentionedUsers());
     }
+
+    /** @test */
+    public function it_wraps_mentioned_user_into_anchor_tag()
+    {
+    	$reply = factory(\App\Reply::class)->make([
+    	    'body' => '@JaneDoe, you need to see this'
+        ]);
+
+    	$this->assertEquals(
+    	    '<a href="/user/JaneDoe/profile">@JaneDoe</a>, you need to see this',
+            $reply->body
+        );
+    }
 }

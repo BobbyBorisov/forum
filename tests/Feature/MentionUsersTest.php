@@ -49,4 +49,17 @@ class MentionUsersTest extends TestCase
 
         Notification::assertNothingSent();
     }
+
+    /** @test */
+    public function it_can_fetch_all_mentioned_users_starting_with_name()
+    {
+    	$john = factory(\App\User::class)->create(['name' => 'john']);
+    	$jane = factory(\App\User::class)->create(['name' => 'jane']);
+
+    	$response = $this->getJson('/api/users?name=john')
+             ->assertStatus(200);
+
+
+    	$this->assertEquals(['john'], $response->json());
+    }
 }
