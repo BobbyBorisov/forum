@@ -34,4 +34,20 @@ class ReplyTest extends TestCase
         $this->assertFalse($reply->wasJustPublished());
 
     }
+
+    /** @test */
+    public function it_can_give_mentioned_users_in_the_body()
+    {
+        $reply = factory(\App\Reply::class)->create([
+            'body' => '@yolo and @anotheruser'
+        ]);
+
+        $this->assertEquals(['yolo', 'anotheruser'], $reply->mentionedUsers());
+
+        $reply = factory(\App\Reply::class)->create([
+            'body' => 'no mentiones'
+        ]);
+
+        $this->assertEquals([], $reply->mentionedUsers());
+    }
 }
