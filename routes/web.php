@@ -43,3 +43,4 @@ Route::get('/profile/{user}/notifications', 'UserNotificationsController@index')
 Route::post('/profile/{user}/notifications/{notification}', 'UserNotificationsController@store');
 
 Route::get('/api/users', 'Api\UsersController@index');
+Route::get('/register/confirm', 'Api\UsersConfirmationController@index');

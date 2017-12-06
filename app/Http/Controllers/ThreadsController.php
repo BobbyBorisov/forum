@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Channel;
 use App\Filters\ThreadFilters;
+use App\Http\Middleware\RedirectIfNotConfirmed;
 use App\Inspections\Spam;
 use App\Rules\SpamFree;
 use App\Thread;
@@ -14,6 +15,7 @@ class ThreadsController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->only('store','create');
+        $this->middleware(RedirectIfNotConfirmed::class);
     }
 
     public function index(Channel $channel, ThreadFilters $filters){

@@ -13,8 +13,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    You are logged in!
+                    Your account is {{auth()->user()->confirmed ? 'confirmed' : 'unconfirmed'}}
                 </div>
             </div>
         </div>

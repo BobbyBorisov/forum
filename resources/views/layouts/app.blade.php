@@ -102,11 +102,16 @@
             </div>
         </nav>
 
+        @include('flash::message')
+
         @yield('content')
-        <flash message="{{session('flash')}}"></flash>
+        {{--<flash message="{{session('flash')}}"></flash>--}}
     </div>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        $('#flash-overlay-modal').modal();
+    </script>
 </body>
 </html>
