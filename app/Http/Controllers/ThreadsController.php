@@ -15,10 +15,11 @@ class ThreadsController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->only('store','create');
-        $this->middleware(RedirectIfNotConfirmed::class);
+        $this->middleware(RedirectIfNotConfirmed::class)->only(['create', 'store','destroy']);
     }
 
     public function index(Channel $channel, ThreadFilters $filters){
+
         if ($channel->exists)
         {
             $threads = $channel->threads()->latest();

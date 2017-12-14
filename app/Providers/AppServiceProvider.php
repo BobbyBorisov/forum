@@ -16,9 +16,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \View::composer('*', function($view){
-            $channels = Cache::rememberForever('channels', function(){
-               return \App\Channel::all();
-            });
+            //$channels = Cache::rememberForever('channels', function(){
+            //   return \App\Channel::all();
+            //});
+
+            $channels = \App\Channel::all();
             $view->with('channels',$channels);
         });
 

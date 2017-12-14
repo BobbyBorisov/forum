@@ -50,7 +50,7 @@ class RegisterUserTest extends TestCase
     	    'confirmation_token' => 'RANDOM_TOKEN'
         ]);
 
-        $request = $this->get('/api/users/confirm?confirmation_token='.$user->confirmation_token);
+        $request = $this->get('/register/confirm?confirmation_token='.$user->confirmation_token);
 
         $this->assertTrue($user->fresh()->confirmed);
         $this->assertNull($user->fresh()->confirmation_token);
