@@ -29,7 +29,7 @@ class ThreadsController extends Controller
         }
 
 
-        $threads = $threads->with('channel')->filter($filters)->get();
+        $threads = $threads->with('channel')->filter($filters)->paginate(25);
 
         if (request()->wantsJson())
         {

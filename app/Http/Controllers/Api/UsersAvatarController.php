@@ -1,32 +1,27 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Reply;
-use App\Thread;
-use App\User;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class UserProfileController extends Controller
+class UsersAvatarController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(Authenticate::class)->only('store','create');
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @param \App\User $user
      * @return \Illuminate\Http\Response
      */
-    public function index(User $user)
+    public function index()
     {
-        $activities = $user->activities->groupBy(function($activity){
-            return $activity->subject->created_at->format('Y-m-d');
-        });
-
-        if (request()->wantsJson())
-        {
-            return $activities;
-        }
-
-        return view('users.index', compact('activities', 'user'));
+        //
     }
 
     /**
@@ -47,7 +42,15 @@ class UserProfileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        request()->validate([
+            'avatar' => ['required', 'image']
+        ]);
+
+        auth()->user()->update([
+           'avatar_path' => request()->file('avatar')->store('avatars','public')
+        ]);
+
+        return response([], 204);
     }
 
     /**

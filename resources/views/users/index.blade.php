@@ -4,7 +4,8 @@
     <div class="container">
         <div class="row">
             <div class="page-header col-md-8 col-md-offset-2">
-                <h1>{{auth()->user()->name}}<small> has {{$activities->flatten()->count()}} activities so far.</small></h1>
+                <avatar-form :user="{{$user}}"></avatar-form>
+                <h3>{{$activities->flatten()->count()}} activities so far.</h3>
             </div>
             <div class="col-md-8 col-md-offset-2">
                 @foreach($activities as $date => $activity)
