@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading level-end">
         <div>
-            <img src="{{asset($thread->creator->avatar())}}" style="margin-right:2px" width="25" height="25">
+            <img src="{{asset($thread->creator->avatar_path)}}" style="margin-right:2px" width="25" height="25">
             <a href="{{route('profile', $thread->creator)}}">{{$thread->creator->name}}</a> posted:
         </div>
         @can('delete', $thread)
