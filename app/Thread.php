@@ -10,6 +10,7 @@ use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Redis;
 
 class Thread extends Model
 {
@@ -102,5 +103,13 @@ class Thread extends Model
         $key = sprintf('users.%s.thread.%s', $user->id, $this->id);
 
         return $this->updated_at > cache($key);
+    }
+
+    /**
+     * @return \App\Visits
+     */
+    public function visits()
+    {
+        return new Visits($this);
     }
 }

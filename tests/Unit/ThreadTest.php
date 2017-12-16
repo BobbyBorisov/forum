@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -119,6 +120,21 @@ class ThreadTest extends TestCase
         $hasUpdatesFor = $thread->hasUpdatesFor($user);
 
         $this->assertTrue($hasUpdatesFor);
+    }
+
+    /** @test */
+    public function it_records_each_visit()
+    {
+        $thread = factory(\App\Thread::class)->create(['id' => 1]);
+
+
+        $thread->visits()->reset();
+
+        $this->assertSame(0, $thread->visits()->count());
+
+        $thread->visits()->record();
+
+        $this->assertEquals(1, $thread->visits()->count());
     }
 
 }
