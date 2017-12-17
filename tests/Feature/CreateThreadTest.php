@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Thread;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -58,6 +59,24 @@ class CreateThreadTest extends TestCase
         $this->actingAs($user)->post('/threads',[
             'title' => 'sometitle'
         ])->assertSessionHasErrors('body');
+    }
+
+    /** @test */
+    public function slug_is_unique()
+    {
+        $user = factory(\App\User::class)->create();
+
+    	$thread = factory(\App\Thread::class)->create(['title' => 'Foo Title', 'slug' => 'foo-title']);
+
+        $this->assertEquals($thread->fresh()->slug, 'foo-title');
+
+    	$this->actingAs($user)->post('/threads', $thread->toArray());
+
+    	$this->assertTrue(Thread::whereSlug('foo-title-2')->exists());
+
+        $this->actingAs($user)->post('/threads', $thread->toArray());
+
+        $this->assertTrue(Thread::whereSlug('foo-title-3')->exists());
     }
 
 

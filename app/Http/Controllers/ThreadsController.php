@@ -84,7 +84,7 @@ class ThreadsController extends Controller
             'body'  => request('body'),
             'user_id' => auth()->user()->id,
             'channel_id' => request('channel_id'),
-            'slug' => str_slug(request('title'))
+            'slug' => request('title')
         ]);
 
         return redirect($thread->path())->with('flash', 'Thread has been created');
