@@ -19,6 +19,7 @@ class CreateThreadsTable extends Migration
             $table->integer('channel_id');
             $table->string('title');
             $table->text('body');
+            $table->string('slug')->unique();
             $table->timestamps();
             $table->timestamp('deleted_at', 0)->nullable();
         });

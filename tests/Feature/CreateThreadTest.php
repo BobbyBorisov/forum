@@ -9,12 +9,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CreateThreadTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function test_authenticated_user_is_able_to_create_thread()
+
+    /** @test */
+    public function authenticated_user_is_able_to_create_thread()
     {
         $this->withoutExceptionHandling();
         $user = factory(\App\User::class)->create();
