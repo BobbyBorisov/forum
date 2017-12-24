@@ -10,6 +10,9 @@ class ThreadPolicy
 {
     use HandlesAuthorization;
 
+    const UPDATE = 'update';
+    const DELETE = 'delete';
+
     /**
      * Determine whether the user can view the thread.
      *
@@ -42,7 +45,7 @@ class ThreadPolicy
      */
     public function update(User $user, Thread $thread)
     {
-        //
+        return $thread->creator->id == $user->id;
     }
 
     /**

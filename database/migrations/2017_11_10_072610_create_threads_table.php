@@ -20,6 +20,7 @@ class CreateThreadsTable extends Migration
             $table->string('title');
             $table->text('body');
             $table->string('slug')->unique();
+            $table->unsignedInteger('best_reply_id')->nullable();
             $table->timestamps();
             $table->timestamp('deleted_at', 0)->nullable();
         });

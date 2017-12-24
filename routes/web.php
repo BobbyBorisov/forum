@@ -45,3 +45,5 @@ Route::post('/profile/{user}/notifications/{notification}', 'UserNotificationsCo
 Route::get('/api/users', 'Api\UsersController@index');
 Route::post('/api/users/{user}/avatar', 'Api\UsersAvatarController@store')->name('avatar');
 Route::get('/register/confirm', 'Api\UsersConfirmationController@index');
+
+Route::post('/replies/{reply}/best','BestRepliesController@store')->name('best-replies.store');

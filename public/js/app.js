@@ -43557,6 +43557,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['data'],
@@ -43566,7 +43571,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             id: this.data.id,
             body: this.data.body,
             owner: this.data.owner,
-            created_at: this.data.created_at
+            created_at: this.data.created_at,
+            isBest: this.data.isBest
         };
     },
 
@@ -43579,6 +43585,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         }
     },
+    created: function created() {
+        var _this2 = this;
+
+        window.events.$on('best-reply', function (id) {
+            _this2.isBest = id === _this2.id;
+            console.log('in ' + _this2.id + 'reply: isbest for ' + id + ' is ' + (id === _this2.id));
+        });
+    },
+
     methods: {
         update: function update() {
             var vm = this;
@@ -43597,6 +43612,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.delete('/replies/' + this.data.id).then(function () {
                 vm.$emit('deleted', vm.id);
             });
+        },
+        markAsBestReply: function markAsBestReply() {
+            var _this3 = this;
+
+            axios.post('/replies/' + this.id + '/best').then(function () {
+                window.events.$emit('best-reply', _this3.id);
+            });
         }
     }
 });
@@ -43609,103 +43631,125 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "panel panel-default" }, [
-    _c("div", { staticClass: "panel-heading level-end" }, [
-      _c("div", [
-        _vm._v(
-          "\n            " +
-            _vm._s(_vm.owner.name) +
-            " said\n            " +
-            _vm._s(_vm.created_at) +
-            " ago...\n        "
+  return _c(
+    "div",
+    {
+      staticClass: "panel",
+      class: _vm.isBest ? "panel-success" : "panel-default"
+    },
+    [
+      _c("div", { staticClass: "panel-heading level-end" }, [
+        _c("div", [
+          _vm._v(
+            "\n            " +
+              _vm._s(_vm.owner.name) +
+              " said\n            " +
+              _vm._s(_vm.created_at) +
+              " ago...\n        "
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "gotoend" },
+          [_c("favorite", { attrs: { data: _vm.data } })],
+          1
         )
       ]),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "gotoend" },
-        [_c("favorite", { attrs: { data: _vm.data } })],
-        1
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "panel-body" }, [
-      _vm.editing
-        ? _c("div", [
-            _c("div", { staticClass: "form-group" }, [
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.body,
-                    expression: "body"
-                  }
-                ],
-                staticClass: "form-control",
-                domProps: { value: _vm.body },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+      _c("div", { staticClass: "panel-body" }, [
+        _vm.editing
+          ? _c("div", [
+              _c("div", { staticClass: "form-group" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.body,
+                      expression: "body"
                     }
-                    _vm.body = $event.target.value
+                  ],
+                  staticClass: "form-control",
+                  domProps: { value: _vm.body },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.body = $event.target.value
+                    }
                   }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-xs btn-success",
-                on: { click: _vm.update }
-              },
-              [_vm._v("Update")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-xs btn-link",
-                on: {
-                  click: function($event) {
-                    _vm.editing = false
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-xs btn-success",
+                  on: { click: _vm.update }
+                },
+                [_vm._v("Update")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-xs btn-link",
+                  on: {
+                    click: function($event) {
+                      _vm.editing = false
+                    }
                   }
-                }
-              },
-              [_vm._v("Cancel")]
-            )
-          ])
-        : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
-    ]),
-    _vm._v(" "),
-    _vm.canUpdate
-      ? _c("div", { staticClass: "panel-footer" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-xs",
-              on: {
-                click: function($event) {
-                  _vm.editing = true
-                }
-              }
-            },
-            [_vm._v("Edit")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-xs btn-danger",
-              on: { click: _vm.destroy }
-            },
-            [_vm._v("Delete")]
-          )
+                },
+                [_vm._v("Cancel")]
+              )
+            ])
+          : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-footer level-end" }, [
+        _vm.canUpdate
+          ? _c("div", [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-xs",
+                  on: {
+                    click: function($event) {
+                      _vm.editing = true
+                    }
+                  }
+                },
+                [_vm._v("Edit")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-xs btn-danger",
+                  on: { click: _vm.destroy }
+                },
+                [_vm._v("Delete")]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", [
+          !_vm.isBest
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-xs btn-primary",
+                  on: { click: _vm.markAsBestReply }
+                },
+                [_vm._v("Best reply?")]
+              )
+            : _vm._e()
         ])
-      : _vm._e()
-  ])
+      ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

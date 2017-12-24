@@ -1,5 +1,5 @@
 <template>
-    <div class="panel panel-default">
+    <div class="panel" :class="isBest ? 'panel-success' : 'panel-default'">
         <div class="panel-heading level-end">
             <div>
                 {{owner.name}} said
@@ -22,9 +22,14 @@
             </div>
         </div>
 
-        <div class="panel-footer" v-if="canUpdate">
-            <button class="btn btn-xs" @click="editing = true">Edit</button>
-            <button class="btn btn-xs btn-danger" @click="destroy">Delete</button>
+        <div class="panel-footer level-end">
+            <div v-if="canUpdate">
+                <button class="btn btn-xs" @click="editing = true">Edit</button>
+                <button class="btn btn-xs btn-danger" @click="destroy">Delete</button>
+            </div>
+            <div>
+                <button class="btn btn-xs btn-primary" v-if="!isBest" @click="markAsBestReply">Best reply?</button>
+            </div>
         </div>
     </div>
 </template>
@@ -37,13 +42,20 @@
                 id: this.data.id,
                 body: this.data.body,
                 owner: this.data.owner,
-                created_at: this.data.created_at
+                created_at: this.data.created_at,
+                isBest: this.data.isBest
             }
         },
         computed:{
             canUpdate() {
                 return this.authorize(user => this.data.user_id == user.id);
             }
+        },
+        created(){
+          window.events.$on('best-reply', id => {
+              this.isBest = (id === this.id);
+              console.log('in '+this.id+'reply: isbest for '+id+' is '+(id === this.id));
+          });
         },
         methods:{
             update(){
@@ -65,6 +77,12 @@
                         vm.$emit('deleted', vm.id);
                      });
             },
+            markAsBestReply(){
+                axios.post('/replies/'+this.id+'/best')
+                    .then(() => {
+                        window.events.$emit('best-reply', this.id);
+                    })
+            }
         }
     }
 </script>

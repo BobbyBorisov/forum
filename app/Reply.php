@@ -18,7 +18,7 @@ class Reply extends Model
 
     protected $withCount = ['favorites'];
 
-    protected $appends = ['isFavorited'];
+    protected $appends = ['isFavorited','isBest'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -50,5 +50,15 @@ class Reply extends Model
     public function setBodyAttribute($body)
     {
         $this->attributes['body'] = preg_replace('/@(\w+)/','<a href="/user/$1/profile">$0</a>',$body);
+    }
+
+    public function isBest()
+    {
+        return $this->thread->best_reply_id == $this->id;
+    }
+
+    public function getIsBestAttribute()
+    {
+        return $this->isBest();
     }
 }
