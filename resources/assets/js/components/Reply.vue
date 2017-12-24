@@ -5,7 +5,10 @@
                 {{owner.name}} said
                 {{created_at}} ago...
             </div>
-            <div class="gotoend">
+            <div class="gotoend level">
+                <div v-if="authorize('markAsBestReply', thread)" class="mr-3">
+                    <button class="btn btn-xs btn-primary" v-if="!isBest" @click="markAsBestReply">Best reply?</button>
+                </div>
                 <favorite :data="data"></favorite>
             </div>
         </div>
@@ -22,14 +25,9 @@
             </div>
         </div>
 
-        <div class="panel-footer level-end">
-            <div v-if="canUpdate">
-                <button class="btn btn-xs" @click="editing = true">Edit</button>
-                <button class="btn btn-xs btn-danger" @click="destroy">Delete</button>
-            </div>
-            <div>
-                <button class="btn btn-xs btn-primary" v-if="!isBest" @click="markAsBestReply">Best reply?</button>
-            </div>
+        <div class="panel-footer" v-if="authorize('updateReply', reply)">
+            <button class="btn btn-xs" @click="editing = true">Edit</button>
+            <button class="btn btn-xs btn-danger" @click="destroy">Delete</button>
         </div>
     </div>
 </template>
@@ -42,13 +40,10 @@
                 id: this.data.id,
                 body: this.data.body,
                 owner: this.data.owner,
+                thread: this.data.thread,
                 created_at: this.data.created_at,
-                isBest: this.data.isBest
-            }
-        },
-        computed:{
-            canUpdate() {
-                return this.authorize(user => this.data.user_id == user.id);
+                isBest: this.data.isBest,
+                reply: this.data
             }
         },
         created(){

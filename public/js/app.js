@@ -22054,9 +22054,21 @@ window.flash = function (message) {
     window.events.$emit('flash', { message: message, level: level });
 };
 
-Vue.prototype.authorize = function (handler) {
-    if (!window.App.user) return false;
-    return handler(window.App.user);
+var authorizations = __webpack_require__(89);
+
+Vue.prototype.authorize = function () {
+
+    if (!window.App.signedIn) return false;
+
+    for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
+        params[_key] = arguments[_key];
+    }
+
+    if (typeof params[0] === 'string') {
+        return authorizations[params[0]](params[1]);
+    }
+
+    return params[0](window.App.user);
 };
 
 // import Echo from 'laravel-echo'
@@ -43560,8 +43572,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['data'],
@@ -43571,26 +43581,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             id: this.data.id,
             body: this.data.body,
             owner: this.data.owner,
+            thread: this.data.thread,
             created_at: this.data.created_at,
-            isBest: this.data.isBest
+            isBest: this.data.isBest,
+            reply: this.data
         };
     },
-
-    computed: {
-        canUpdate: function canUpdate() {
-            var _this = this;
-
-            return this.authorize(function (user) {
-                return _this.data.user_id == user.id;
-            });
-        }
-    },
     created: function created() {
-        var _this2 = this;
+        var _this = this;
 
         window.events.$on('best-reply', function (id) {
-            _this2.isBest = id === _this2.id;
-            console.log('in ' + _this2.id + 'reply: isbest for ' + id + ' is ' + (id === _this2.id));
+            _this.isBest = id === _this.id;
+            console.log('in ' + _this.id + 'reply: isbest for ' + id + ' is ' + (id === _this.id));
         });
     },
 
@@ -43614,10 +43616,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         markAsBestReply: function markAsBestReply() {
-            var _this3 = this;
+            var _this2 = this;
 
             axios.post('/replies/' + this.id + '/best').then(function () {
-                window.events.$emit('best-reply', _this3.id);
+                window.events.$emit('best-reply', _this2.id);
             });
         }
     }
@@ -43651,8 +43653,25 @@ var render = function() {
         _vm._v(" "),
         _c(
           "div",
-          { staticClass: "gotoend" },
-          [_c("favorite", { attrs: { data: _vm.data } })],
+          { staticClass: "gotoend level" },
+          [
+            _vm.authorize("markAsBestReply", _vm.thread)
+              ? _c("div", { staticClass: "mr-3" }, [
+                  !_vm.isBest
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-xs btn-primary",
+                          on: { click: _vm.markAsBestReply }
+                        },
+                        [_vm._v("Best reply?")]
+                      )
+                    : _vm._e()
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("favorite", { attrs: { data: _vm.data } })
+          ],
           1
         )
       ]),
@@ -43708,46 +43727,31 @@ var render = function() {
           : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "panel-footer level-end" }, [
-        _vm.canUpdate
-          ? _c("div", [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-xs",
-                  on: {
-                    click: function($event) {
-                      _vm.editing = true
-                    }
+      _vm.authorize("updateReply", _vm.reply)
+        ? _c("div", { staticClass: "panel-footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-xs",
+                on: {
+                  click: function($event) {
+                    _vm.editing = true
                   }
-                },
-                [_vm._v("Edit")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-xs btn-danger",
-                  on: { click: _vm.destroy }
-                },
-                [_vm._v("Delete")]
-              )
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _c("div", [
-          !_vm.isBest
-            ? _c(
-                "button",
-                {
-                  staticClass: "btn btn-xs btn-primary",
-                  on: { click: _vm.markAsBestReply }
-                },
-                [_vm._v("Best reply?")]
-              )
-            : _vm._e()
-        ])
-      ])
+                }
+              },
+              [_vm._v("Edit")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-xs btn-danger",
+                on: { click: _vm.destroy }
+              },
+              [_vm._v("Delete")]
+            )
+          ])
+        : _vm._e()
     ]
   )
 }
@@ -46493,6 +46497,32 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */
+/***/ (function(module, exports) {
+
+var auth_user = window.App.user;
+
+var authorizations = {
+    updateReply: function updateReply(reply) {
+        return reply.user_id === auth_user.id;
+    },
+    markAsBestReply: function markAsBestReply(thread) {
+        return thread.creator.id === auth_user.id;
+    }
+};
+
+module.exports = authorizations;
 
 /***/ })
 /******/ ]);

@@ -28,6 +28,9 @@
             display: flex;
             justify-content: space-between;
         }
+        .mr-3{
+            margin-right:3px;
+        }
     </style>
     @yield('header')
 </head>
