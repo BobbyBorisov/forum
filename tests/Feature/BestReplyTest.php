@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Reply;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -14,7 +15,7 @@ class BestReplyTest extends TestCase
     {
         $this->signIn();
         $thread = factory(\App\Thread::class)->create(['user_id' => auth()->user()->id]);
-        $replies = factory(\App\Reply::class,2)->create(['thread_id'=> $thread->id]);
+        $replies = factory(Reply::class,2)->create(['thread_id'=> $thread->id]);
 
         $this->assertFalse($replies[1]->fresh()->isBest());
 
@@ -28,7 +29,7 @@ class BestReplyTest extends TestCase
     {
         $this->signIn();
         $thread = factory(\App\Thread::class)->create(['user_id' => auth()->user()->id]);
-        $replies = factory(\App\Reply::class,2)->create(['thread_id'=> $thread->id]);
+        $replies = factory(Reply::class,2)->create(['thread_id'=> $thread->id]);
 
         $anotherUser = factory(\App\User::class)->create();
 
@@ -39,5 +40,23 @@ class BestReplyTest extends TestCase
              ->assertStatus(403);
 
         $this->assertFalse($replies[1]->fresh()->isBest());
+    }
+
+    /** @test */
+    public function if_reply_is_deleted_thread_is_updated_to_reflect_that()
+    {
+    	$user = $this->signIn();
+
+    	$reply = factory(Reply::class)->create(['user_id' => auth()->user()->id]);
+
+    	$reply->thread->markBestReply($reply);
+
+    	$this->assertTrue($reply->fresh()->isBest());
+    	$this->assertNotNull($reply->fresh()->thread->best_reply_id);
+
+    	$reply->delete();
+
+        $this->assertFalse($reply->fresh()->isBest());
+        $this->assertNull($reply->fresh()->thread->best_reply_id);
     }
 }

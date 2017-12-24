@@ -20,6 +20,14 @@ class Reply extends Model
 
     protected $appends = ['isFavorited','isBest'];
 
+    public static function boot(){
+        static::deleting(function ($model){
+            if($model->isBest())
+            {
+                $model->thread->update(['best_reply_id' => null]);
+            }
+        });
+    }
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
