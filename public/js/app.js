@@ -43453,7 +43453,7 @@ var render = function() {
           { key: reply.id },
           [
             _c("reply", {
-              attrs: { data: reply },
+              attrs: { reply: reply },
               on: {
                 deleted: function($event) {
                   _vm.remove(index)
@@ -43574,17 +43574,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['data'],
+    props: ['reply'],
     data: function data() {
         return {
             editing: false,
-            id: this.data.id,
-            body: this.data.body,
-            owner: this.data.owner,
-            thread: this.data.thread,
-            created_at: this.data.created_at,
-            isBest: this.data.isBest,
-            reply: this.data
+            id: this.reply.id,
+            body: this.reply.body,
+            owner: this.reply.owner,
+            thread: this.reply.thread,
+            created_at: this.reply.created_at,
+            isBest: this.reply.isBest
         };
     },
     created: function created() {
@@ -43600,7 +43599,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         update: function update() {
             var vm = this;
 
-            axios.patch('/replies/' + this.data.id, {
+            axios.patch('/replies/' + this.reply.id, {
                 body: this.body
             }).then(function () {
                 vm.editing = false;
@@ -43611,7 +43610,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         destroy: function destroy() {
             var vm = this;
-            axios.delete('/replies/' + this.data.id).then(function () {
+            axios.delete('/replies/' + this.reply.id).then(function () {
                 vm.$emit('deleted', vm.id);
             });
         },
@@ -43655,7 +43654,7 @@ var render = function() {
           "div",
           { staticClass: "gotoend level" },
           [
-            _vm.authorize("markAsBestReply", _vm.thread)
+            _vm.authorize("owns", _vm.thread)
               ? _c("div", { staticClass: "mr-3" }, [
                   !_vm.isBest
                     ? _c(
@@ -43670,7 +43669,7 @@ var render = function() {
                 ])
               : _vm._e(),
             _vm._v(" "),
-            _c("favorite", { attrs: { data: _vm.data } })
+            _c("favorite", { attrs: { data: _vm.reply } })
           ],
           1
         )
@@ -43727,7 +43726,7 @@ var render = function() {
           : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
       ]),
       _vm._v(" "),
-      _vm.authorize("updateReply", _vm.reply)
+      _vm.authorize("owns", _vm.reply)
         ? _c("div", { staticClass: "panel-footer" }, [
             _c(
               "button",
@@ -46517,8 +46516,13 @@ var authorizations = {
     updateReply: function updateReply(reply) {
         return reply.user_id === auth_user.id;
     },
-    markAsBestReply: function markAsBestReply(thread) {
+    updateThread: function updateThread(thread) {
         return thread.creator.id === auth_user.id;
+    },
+    owns: function owns(model) {
+        var prop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'user_id';
+
+        return model[prop] === auth_user.id;
     }
 };
 

@@ -6,10 +6,10 @@
                 {{created_at}} ago...
             </div>
             <div class="gotoend level">
-                <div v-if="authorize('markAsBestReply', thread)" class="mr-3">
+                <div v-if="authorize('owns', thread)" class="mr-3">
                     <button class="btn btn-xs btn-primary" v-if="!isBest" @click="markAsBestReply">Best reply?</button>
                 </div>
-                <favorite :data="data"></favorite>
+                <favorite :data="reply"></favorite>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <div class="panel-footer" v-if="authorize('updateReply', reply)">
+        <div class="panel-footer" v-if="authorize('owns', reply)">
             <button class="btn btn-xs" @click="editing = true">Edit</button>
             <button class="btn btn-xs btn-danger" @click="destroy">Delete</button>
         </div>
@@ -33,17 +33,16 @@
 </template>
 <script>
     export default {
-        props:['data'],
+        props:['reply'],
         data() {
             return {
                 editing:false,
-                id: this.data.id,
-                body: this.data.body,
-                owner: this.data.owner,
-                thread: this.data.thread,
-                created_at: this.data.created_at,
-                isBest: this.data.isBest,
-                reply: this.data
+                id: this.reply.id,
+                body: this.reply.body,
+                owner: this.reply.owner,
+                thread: this.reply.thread,
+                created_at: this.reply.created_at,
+                isBest: this.reply.isBest,
             }
         },
         created(){
@@ -56,7 +55,7 @@
             update(){
                 var vm = this;
 
-                axios.patch('/replies/'+this.data.id, {
+                axios.patch('/replies/'+this.reply.id, {
                     body: this.body
                 }).then(function(){
                     vm.editing = false;
@@ -67,7 +66,7 @@
             },
             destroy(){
                 var vm = this;
-                axios.delete('/replies/' + this.data.id)
+                axios.delete('/replies/' + this.reply.id)
                      .then(function(){
                         vm.$emit('deleted', vm.id);
                      });

@@ -4,8 +4,11 @@ let authorizations = {
     updateReply(reply){
         return reply.user_id === auth_user.id;
     },
-    markAsBestReply(thread){
+    updateThread(thread){
         return thread.creator.id === auth_user.id;
+    },
+    owns(model, prop = 'user_id'){
+        return model[prop] === auth_user.id;
     }
 };
 
