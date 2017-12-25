@@ -43591,7 +43591,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         window.events.$on('best-reply', function (id) {
             _this.isBest = id === _this.id;
-            console.log('in ' + _this.id + 'reply: isbest for ' + id + ' is ' + (id === _this.id));
         });
     },
 

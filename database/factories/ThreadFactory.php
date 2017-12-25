@@ -14,6 +14,7 @@ $factory->define(App\Thread::class, function (Faker $faker) {
         'title' => $sentence,
         'slug' => str_slug($sentence),
         'body'  => $faker->paragraph,
-        'created_at' => \Carbon\Carbon::now()
+        'created_at' => \Carbon\Carbon::now(),
+        'locked' => false
     ];
 });

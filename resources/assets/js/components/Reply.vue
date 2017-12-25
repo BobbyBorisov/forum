@@ -48,7 +48,6 @@
         created(){
           window.events.$on('best-reply', id => {
               this.isBest = (id === this.id);
-              console.log('in '+this.id+'reply: isbest for '+id+' is '+(id === this.id));
           });
         },
         methods:{
