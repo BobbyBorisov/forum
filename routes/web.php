@@ -47,3 +47,5 @@ Route::post('/api/users/{user}/avatar', 'Api\UsersAvatarController@store')->name
 Route::get('/register/confirm', 'Api\UsersConfirmationController@index');
 
 Route::post('/replies/{reply}/best','BestRepliesController@store')->name('best-replies.store');
+Route::patch('/lock-thread/{thread}/lock','LockThreadController@store')->name('lock-thread.store');
+Route::delete('/lock-thread/{thread}/lock','LockThreadController@destroy')->name('lock-thread.destroy');

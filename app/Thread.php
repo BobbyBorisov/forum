@@ -28,6 +28,10 @@ class Thread extends Model
 
     protected $appends = ['isSubscribed'];
 
+    protected $casts = [
+        'locked' => 'boolean'
+    ];
+
     protected static function boot()
     {
         parent::boot();
