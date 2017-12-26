@@ -28,8 +28,15 @@
             display: flex;
             justify-content: space-between;
         }
+        .level-center{
+            display: flex;
+            justify-content: center;
+        }
         .mr-3{
             margin-right:3px;
+        }
+        .mt-10{
+            margin-top:10px;
         }
     </style>
     @yield('header')

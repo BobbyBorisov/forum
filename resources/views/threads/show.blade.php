@@ -29,7 +29,10 @@
                             <p>Creator: <a href="#">{{$thread->creator->name}}</a></p>
                             <p>{{str_plural('Comment', $thread->replies_count)}}: <span v-text="repliesCount"></span></p>
                             <p>{{str_plural('Subscriber', $thread->subscriptions_count)}}: {{$thread->subscriptions_count}}</p>
-                            <subscription-button :active="{{json_encode($thread->isSubscribed)}}"></subscription-button>
+                            <div class="level">
+                                <subscription-button :active="{{json_encode($thread->isSubscribed)}}" class="mr-3"></subscription-button>
+                                <button class="btn btn-primary" v-if="authorize('isAdmin')" v-text="this.locked ? 'Unlock' : 'Lock'" @click="toggleLock"></button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -26,7 +26,7 @@ class Thread extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['isSubscribed'];
+    protected $appends = ['isSubscribed','isLocked'];
 
     protected $casts = [
         'locked' => 'boolean'
@@ -154,5 +154,10 @@ class Thread extends Model
     public function lock()
     {
         $this->update(['locked' => true]);
+    }
+
+    public function getIsLockedAttribute()
+    {
+        return $this->locked;
     }
 }

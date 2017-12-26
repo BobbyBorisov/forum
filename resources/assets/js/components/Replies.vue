@@ -6,7 +6,8 @@
 
         <paginator :dataSet="dataSet" @changed="fetch"></paginator>
 
-        <new-reply @created="add"></new-reply>
+        <p class="level-center mt-10" v-if="$parent.locked">This thread is locked by the administrator.</p>
+        <new-reply v-else @created="add"></new-reply>
     </div>
 </template>
 
@@ -15,7 +16,7 @@
         data(){
             return {
                 dataSet: [],
-                replies: []
+                replies: [],
             };
         },
         created(){

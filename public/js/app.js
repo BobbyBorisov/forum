@@ -43393,6 +43393,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -43470,7 +43471,11 @@ var render = function() {
         on: { changed: _vm.fetch }
       }),
       _vm._v(" "),
-      _c("new-reply", { on: { created: _vm.add } })
+      _vm.$parent.locked
+        ? _c("p", { staticClass: "level-center mt-10" }, [
+            _vm._v("This thread is locked by the administrator.")
+          ])
+        : _c("new-reply", { on: { created: _vm.add } })
     ],
     2
   )
@@ -45785,8 +45790,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: ['data'],
     data: function data() {
         return {
-            repliesCount: this.data.replies_count
+            repliesCount: this.data.replies_count,
+            locked: this.data.isLocked
         };
+    },
+
+    methods: {
+        toggleLock: function toggleLock() {
+            console.log('toggle lock');
+            axios[this.locked ? 'delete' : 'patch']('/lock-thread/' + this.data.slug + '/lock');
+            this.locked = !this.locked;
+            console.log('locked ' + this.locked);
+        }
     }
 });
 
@@ -46522,6 +46537,9 @@ var authorizations = {
         var prop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'user_id';
 
         return model[prop] === auth_user.id;
+    },
+    isAdmin: function isAdmin() {
+        return ['JohnDoe'].includes(auth_user.name);
     }
 };
 
