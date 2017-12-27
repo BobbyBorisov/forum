@@ -6,6 +6,7 @@ use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Http\Middleware\RedirectIfNotConfirmed;
 use App\Inspections\Spam;
+use App\Policies\ThreadPolicy;
 use App\Rules\SpamFree;
 use App\Thread;
 use App\Trending;
@@ -16,7 +17,7 @@ class ThreadsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->only('store','create');
+        $this->middleware('auth')->only('store','create','update');
         $this->middleware(RedirectIfNotConfirmed::class)->only(['create', 'store','destroy']);
     }
 
@@ -88,6 +89,28 @@ class ThreadsController extends Controller
         ]);
 
         return redirect($thread->path())->with('flash', 'Thread has been created');
+    }
+
+    /**
+     * @param $channel
+     * @param \App\Thread $thread
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function update($channel, Thread $thread)
+    {
+        $this->authorize(ThreadPolicy::UPDATE, $thread);
+
+        request()->validate([
+           'title' => 'required',
+           'body' => 'required'
+        ]);
+
+        $thread->update([
+            'title' => request('title'),
+            'body' => request('body')
+        ]);
+
+        return response([], 200);
     }
 
     public function destroy(Thread $thread)

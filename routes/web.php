@@ -19,6 +19,7 @@ Route::post('/threads', 'ThreadsController@store');
 Route::get('/threads/create', 'ThreadsController@create');
 Route::get('/threads/{channel?}', 'ThreadsController@index');
 Route::get('/threads/{channel}/{thread}', 'ThreadsController@show');
+Route::patch('/threads/{channel}/{thread}', 'ThreadsController@update')->name('thread.update');
 Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadsSubscriptionController@store')->middleware('auth');
 Route::delete('/threads/{channel}/{thread}/subscriptions', 'ThreadsSubscriptionController@destroy')->middleware('auth');
 
