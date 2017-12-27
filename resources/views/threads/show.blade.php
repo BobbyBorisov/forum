@@ -8,7 +8,7 @@
     <thread-view :data='{{$thread}}' inline-template>
         <div class="container">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-8 v-cloak">
                     @include('threads._question')
 
                     <replies @add="repliesCount++" @remove="repliesCount--"></replies>

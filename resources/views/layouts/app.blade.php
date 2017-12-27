@@ -38,6 +38,8 @@
         .mt-10{
             margin-top:10px;
         }
+
+        [v-cloak] { display: none; }
     </style>
     @yield('header')
 </head>
