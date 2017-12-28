@@ -11,10 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
+use Laravel\Scout\Searchable;
 
 class Thread extends Model
 {
-    use SoftDeletes, CascadeSoftDeletes, RecordsActivity;
+    use SoftDeletes,
+        CascadeSoftDeletes,
+        RecordsActivity,
+        Searchable;
 
     protected $guarded = [];
 
